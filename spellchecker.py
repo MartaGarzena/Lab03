@@ -8,24 +8,29 @@ class SpellChecker:
         self.listaRich = None
 
     def handleSentence(self, txtIn, language):
-        start_time=time.monotonic()
-        chars = "\\`*_{}[]()>#+-.!$%^;,=_~"
-        for c in chars:
-            txtIn = txtIn.replace(c, "")
-        txtIn.lower()
+        txtIn = replaceChars(txtIn.lower())
 
         words = txtIn.split(" ")
-        self.listaRich = md.MultiDictionary().searchWord(words, language)
-        mystr = ""
-        for r in self.listaRich:
-            if not r.corretta:
-                mystr += r._parola + "\n"
 
-        end_time=time.monotonic()
-        mystr += "\nTempo di esecuzione: " + str(end_time-start_time) + " secondi"
-        return  mystr
+        print("------------------------------")
+        print("metodo 1 ")
+        t1 = time.time()
+        parole = md.MultiDictionary().searchWord(words, language)
+        for parola in parole:
+            if not parola.corretta:
+                print(parola)
+        t2 = time.time()
+        print("Time elapsed " + str(t2 - t1))
 
-
+        print("------------------------------")
+        print("Using searchWordDichotomic")
+        t3 = time.time()
+        parole = md.MultiDictionary().searchWordDichotomic(words, language)
+        for parola in parole:
+            if not parola.corretta:
+                print(parola)
+        t4 = time.time()
+        print("Time elapsed " + str(t4 - t3))
 
     def printMenu(self):
         print("______________________________\n" +
@@ -39,5 +44,8 @@ class SpellChecker:
               "______________________________\n")
 
 
-def replaceChars(text):
-    pass
+def replaceChars(txtIn):
+    chars = "\\`*_{}[]()>#+-.!$%^;,=_~"
+    for c in chars:
+        txtIn = txtIn.replace(c, "")
+    return txtIn
